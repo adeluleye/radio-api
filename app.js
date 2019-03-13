@@ -4,8 +4,9 @@ const winston = require('winston');
 // Initialize app
 const app = express();
 
-require('./startup/db')();
 require('./startup/logging')();
+require('./startup/routes')(app);
+require('./startup/db')();
 
 // Define a home route
 app.get('/', (req, res) => {
