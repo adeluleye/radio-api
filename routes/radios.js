@@ -4,7 +4,10 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const radios = await Radio.find().sort('name');
-  res.send(radios);
+  res.send({
+      success: true,
+      ONLINE_RADIO: radios
+    });
 });
 
 router.post('/', async (req, res) => {
