@@ -1,6 +1,7 @@
 const express = require('express');
 const upload = require('../middleware/fileUploader');
 const { Radio, validateRadio } = require('../models/radio');
+const { City } = require('../models/city');
 
 const router = express.Router();
 
@@ -16,9 +17,18 @@ router.post('/', upload.single('image'), async (req, res) => {
 
   const { error } = validateRadio(req.body); 
   if (error) return res.status(400).send(error.details[0].message);
+  
+  const city = await City.findById(req.body.cityId);
+  if (!city) return res.status(400).send('Invalid radio city');
+
   if (!req.file) return res.status(400).send("Please upload a jpeg or png file");
+
   const radio = new Radio({
       name: req.body.name,
+      city: {
+          _id: city._id,
+          name: city.name
+      },
       url: req.body.url,
       frequency: req.body.frequency,
       image: req.file.path,
@@ -32,11 +42,19 @@ router.post('/', upload.single('image'), async (req, res) => {
 router.put('/:id', upload.single('image'), async (req, res) => {
     const { error } = validateRadio(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
+
+    const city = await City.findById(req.body.cityId);
+    if (!city) return res.status(400).send('Invalid radio city.');
+    
     if (!req.file) return res.status(400).send("Please upload a jpeg or png file");
   
     const radio = await Radio.findByIdAndUpdate(req.params.id,
       { 
         name: req.body.name,
+        city: {
+            _id: city._id,
+            name: city.name
+        },
         url: req.body.url,
         frequency: req.body.frequency,
         image: req.file.path,

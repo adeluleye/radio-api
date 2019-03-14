@@ -1,5 +1,8 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
+const { citySchema } = require('./city');
+
+Joi.objectId = require('joi-objectid')(Joi);
 
 const Radio = mongoose.model('Radio', new mongoose.Schema({
     name: {
@@ -8,6 +11,10 @@ const Radio = mongoose.model('Radio', new mongoose.Schema({
         trim: true,
         minlength: 3,
         maxlength: 255
+    },
+    city: {
+        type: citySchema,
+        required: true
     },
     url: {
         type: String,
@@ -36,6 +43,7 @@ const Radio = mongoose.model('Radio', new mongoose.Schema({
 function validateRadio(radio) {
     const schema = {
       name: Joi.string().min(5).max(255).required(),
+      cityId: Joi.objectId().required(),
       url: Joi.string().min(5).max(255).required(),
       frequency: Joi.string().min(3).max(255).required(),
       description: Joi.string().required()
