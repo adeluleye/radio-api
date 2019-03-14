@@ -1,5 +1,7 @@
-const { Radio, validateRadio } = require('../models/radio');
 const express = require('express');
+const upload = require('../middleware/fileUploader');
+const { Radio, validateRadio } = require('../models/radio');
+
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -10,15 +12,16 @@ router.get('/', async (req, res) => {
     });
 });
 
-router.post('/', async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
+
   const { error } = validateRadio(req.body); 
   if (error) return res.status(400).send(error.details[0].message);
-  
+  if (!req.file) return res.status(400).send("Please upload a jpeg or png file");
   const radio = new Radio({
       name: req.body.name,
       url: req.body.url,
       frequency: req.body.frequency,
-      image: req.body.image,
+      image: req.file.path,
       description: req.body.description
   });
   await radio.save();
@@ -26,16 +29,17 @@ router.post('/', async (req, res) => {
   res.send(radio);
 });
 
-router.put('/:id', async (req, res) => {
-    const { error } = validate(req.body); 
+router.put('/:id', upload.single('image'), async (req, res) => {
+    const { error } = validateRadio(req.body); 
     if (error) return res.status(400).send(error.details[0].message);
+    if (!req.file) return res.status(400).send("Please upload a jpeg or png file");
   
     const radio = await Radio.findByIdAndUpdate(req.params.id,
       { 
         name: req.body.name,
         url: req.body.url,
         frequency: req.body.frequency,
-        image: req.body.image,
+        image: req.file.path,
         description: req.body.description
       }, { new: true });
   

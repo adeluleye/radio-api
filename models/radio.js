@@ -38,7 +38,6 @@ function validateRadio(radio) {
       name: Joi.string().min(5).max(255).required(),
       url: Joi.string().min(5).max(255).required(),
       frequency: Joi.string().min(3).max(255).required(),
-      image: Joi.string().min(5).max(255).required(),
       description: Joi.string().required()
     };
   

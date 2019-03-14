@@ -4,6 +4,8 @@ const winston = require('winston');
 // Initialize app
 const app = express();
 
+app.use('/uploads', express.static('uploads'));
+
 require('./startup/logging')();
 require('./startup/routes')(app);
 require('./startup/db')();
