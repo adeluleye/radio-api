@@ -7,6 +7,7 @@ const app = express();
 app.use('/uploads', express.static('uploads'));
 
 require('./startup/logging')();
+require('./startup/cors')(app);
 require('./startup/routes')(app);
 require('./startup/db')();
 require('./startup/validation');
