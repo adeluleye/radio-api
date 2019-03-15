@@ -38,6 +38,11 @@ const Radio = mongoose.model('Radio', new mongoose.Schema({
         type: String,
         required: true,
     },
+    isFeatured: {
+        type: Number,
+        max: 1,
+        default: 0
+    }
 }));
 
 function validateRadio(radio) {
@@ -46,7 +51,8 @@ function validateRadio(radio) {
       cityId: Joi.objectId().required(),
       url: Joi.string().min(5).max(255).required(),
       frequency: Joi.string().min(3).max(255).required(),
-      description: Joi.string().required()
+      description: Joi.string().required(),
+      isFeatured: Joi.number().max(1)
     };
   
     return Joi.validate(radio, schema);

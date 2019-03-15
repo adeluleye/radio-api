@@ -6,7 +6,15 @@ const { City } = require('../models/city');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const radios = await Radio.find().sort('name');
+  const radios = await Radio.find().select('-description -_id').sort('name');
+  res.send({
+      success: true,
+      ONLINE_RADIO: radios
+    });
+});
+
+router.get('/featured', async (req, res) => {
+  const radios = await Radio.find({ isFeatured: 1 }).select('-description -_id').sort('name');
   res.send({
       success: true,
       ONLINE_RADIO: radios
@@ -32,7 +40,8 @@ router.post('/', upload.single('image'), async (req, res) => {
       url: req.body.url,
       frequency: req.body.frequency,
       image: req.file.path,
-      description: req.body.description
+      description: req.body.description,
+      isFeatured: req.body.isFeatured
   });
   await radio.save();
 
@@ -58,7 +67,8 @@ router.put('/:id', upload.single('image'), async (req, res) => {
         url: req.body.url,
         frequency: req.body.frequency,
         image: req.file.path,
-        description: req.body.description
+        description: req.body.description,
+        isFeatured: req.body.isFeatured
       }, { new: true });
   
     if (!radio) return res.status(404).send('The radio with the given ID was not found.');
