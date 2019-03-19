@@ -6,19 +6,17 @@ const { City } = require('../models/city');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const radios = await Radio.find().select('-description -_id').sort('name');
+  const radios = await Radio.find().select('-description').sort('name');
   res.send({
       success: true,
+      message: 'Stations',
       ONLINE_RADIO: radios
     });
 });
 
 router.get('/featured', async (req, res) => {
   const radios = await Radio.find({ isFeatured: 1 }).select('-description -_id').sort('name');
-  res.send({
-      success: true,
-      ONLINE_RADIO: radios
-    });
+  res.send(radios);
 });
 
 router.post('/', upload.single('image'), async (req, res) => {

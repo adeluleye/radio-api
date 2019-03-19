@@ -5,7 +5,11 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const themes = await Theme.find().sort('name');
-  res.send(themes);
+  res.send({
+    success: true,
+    message: 'Themes',
+    ONLINE_RADIO: themes
+  });
 });
 
 router.post('/', async (req, res) => {

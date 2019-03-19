@@ -7,7 +7,11 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   //throw new Error('Could not get the cities.');
   const cities = await City.find().sort('name');
-  res.send(cities);
+  res.send({
+    status: true,
+    message: 'Cities',
+    ONLINE_RADIO: cities
+  });
 
 });
 
